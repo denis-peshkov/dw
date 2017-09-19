@@ -1,0 +1,22 @@
+# https://travis-ci.org/denis-peshkov/VirtualRrouterManager
+language: csharp
+solution: DW.sln
+script:
+  - grep "Test Results" build.log
+dotnet: 2.0.0
+dist: trusty
+install:
+#  - sudo apt-get install nunit-console
+#  - sudo apt-get install dotnet-dev-1.0.4
+  - nuget restore DW.sln
+#  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+script:
+  - xbuild /p:Configuration=Release DW.sln
+#  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./MyProject.Tests/bin/Release/MyProject.Tests.dll
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/62031f782e1d7f3d28e1
+    on_success: change  # options: [always|never|change] default: always
+    on_failure: always  # options: [always|never|change] default: always
+    on_start: never     # options: [always|never|change] default: always
