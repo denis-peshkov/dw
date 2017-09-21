@@ -2,12 +2,14 @@
 import { Http, Response } from '@angular/http';
 import { globalConf, GlobalConfig } from '../../globals';
 import { Observable, Subscriber } from 'rxjs';
+import 'rxjs/add/operator/map';
+import 'rxjs/Rx';
 
-class Info implements OnChanges, OnInit {
+export class Info implements OnChanges, OnInit {
 
-    constructor() {
-        console.log("zodiac=" + this.zodiac);
-    }
+    //constructor(p0: any) {
+    //    this.zodiac = p0.zodiac;
+    //}
 
     ngOnInit(): void {
         console.log("zodiac=" + this.zodiac);
@@ -31,14 +33,18 @@ class Info implements OnChanges, OnInit {
     zodiacPath: string;
 
     zodiacPath1 = function (this: Info) {
-        return this.zodiac + "0000000";
+        return `/i/zodiac/${this.zodiac}.gif`;
     }
 
     zodiacPath2(this: Info) {
         return `/i/zodiac/${this.zodiac}.gif`;
     }
 
-    get zodiacPath3(): string {
+    zodiacPath3() {
+        return `/i/zodiac/${this.zodiac}.gif`;
+    }
+
+    get zodiacPath4(): string {
         var res = `/i/zodiac/${this.zodiac}.gif`;
         return res;
     }
@@ -70,13 +76,12 @@ export class InfComponent {
         this.conf.hideNavPanel = true;
         this.url = baseUrl + 'api/Info/UserInfo';
 
-        //this.current = this.getInfoWithObservable();
-        
-        http.get(this.url).subscribe(result => {
-            this.current = result.json();
+        //var obs=this.getInfoWithObservable();
 
-            var t2 = this.current.zodiacPath2;
-            var t3 = 45;
+        //let subs = obs.subscribe(v => this.current = v);
+
+        http.get(this.url).subscribe(result=> {
+            this.current = Object.assign(new Info(), result.json());
             //this.current.zodiacPath = `/i/zodiac/${this.current.zodiac}.gif`;
         }, error => console.error(error));
 
@@ -87,6 +92,4 @@ export class InfComponent {
         return this.http.get(this.url).map((res: Response) => res.json());
     }
 
-
-    handleErrorObservable: (err: any, caught: Observable<Object>) => any;
 }
