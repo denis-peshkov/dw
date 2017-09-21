@@ -1,6 +1,7 @@
 ﻿import { Component, Inject, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Response } from '@angular/http';
 import { globalConf, GlobalConfig } from '../../globals';
+import { Observable, Subscriber } from 'rxjs';
 
 class Info implements OnChanges, OnInit {
 
@@ -9,7 +10,7 @@ class Info implements OnChanges, OnInit {
     }
 
     ngOnInit(): void {
-        console.log("zodiac="+this.zodiac);
+        console.log("zodiac=" + this.zodiac);
         //this.zodiacPath = `EEEE${this.zodiac}`;
     }
 
@@ -60,19 +61,32 @@ class Info implements OnChanges, OnInit {
 })
 
 export class InfComponent {
+    private readonly url: string;
     public current: Info;
     public conf: GlobalConfig;
 
-    constructor(http: Http, @Inject('BASE_URL') baseUrl: string/*, @Inject('GLOBAL_CONFIG') globalConfig: GlobalConfig*/) {
+    constructor(private readonly http: Http, @Inject('BASE_URL') baseUrl: string/*, @Inject('GLOBAL_CONFIG') globalConfig: GlobalConfig*/) {
         this.conf = globalConf;
         this.conf.hideNavPanel = true;
+        this.url = baseUrl + 'api/Info/UserInfo';
 
-        http.get(baseUrl + 'api/Info/UserInfo').subscribe(result => {
-            var res = result.json() as Info;
-            this.current = res;
-            this.current.zodiacPath = `/i/zodiac/${this.current.zodiac}.gif`;
+        //this.current = this.getInfoWithObservable();
+        
+        http.get(this.url).subscribe(result => {
+            this.current = result.json();
+
+            var t2 = this.current.zodiacPath2;
+            var t3 = 45;
+            //this.current.zodiacPath = `/i/zodiac/${this.current.zodiac}.gif`;
         }, error => console.error(error));
 
         var t = 34;
     }
+
+    getInfoWithObservable(): Observable<Info> {
+        return this.http.get(this.url).map((res: Response) => res.json());
+    }
+
+
+    handleErrorObservable: (err: any, caught: Observable<Object>) => any;
 }
