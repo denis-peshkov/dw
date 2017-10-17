@@ -8,10 +8,12 @@ dist: trusty
 install:
 #  - sudo apt-get install nunit-console
 #  - sudo apt-get install dotnet-dev-1.0.4
-  - nuget restore DW.sln
+#  - nuget restore DW.sln
+  - dotnet restore
 #  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
 script:
-  - xbuild /p:Configuration=Release DW.sln
+#  - xbuild /p:Configuration=Release DW.sln
+  - dotnet build
 #  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./MyProject.Tests/bin/Release/MyProject.Tests.dll
 notifications:
   webhooks:
