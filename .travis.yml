@@ -10,6 +10,7 @@ install:
 #  - sudo apt-get install dotnet-dev-1.0.4
 #  - nuget restore DW.sln
   - dotnet restore
+  - (cd src/Web && npm install)
 #  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
 script:
 #  - xbuild /p:Configuration=Release DW.sln
